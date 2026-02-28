@@ -1,0 +1,268 @@
+================================================================================
+  AUTOMATIC COPILOT EVALUATION REPORT
+  Course: Digital Transformation and Enterprise Architecture – ML Bootcamp
+  Assignment: Stellar Luminosity – Linear and Polynomial Regression
+  Student: David Eduardo Salamanca Aguilar
+  Evaluator: GitHub Copilot (Automated TA)
+================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This is a technically sound and well-structured submission. Both notebooks cover
+all mandatory elements of the assignment: the dataset is defined inline, only
+NumPy and Matplotlib are used, gradient derivations are explicit and correct, and
+both vectorized and non-vectorized implementations are provided. Polynomial
+regression in Notebook 2 is properly extended to the multivariate case with
+feature engineering (M, T, M², M·T), model comparison (M1/M2/M3), an interaction
+cost sweep, and an inference demonstration. The README provides extensive evidence
+of execution on AWS SageMaker Studio with screenshots covering each stage. The
+conceptual discussions are present and physically motivated. Minor weaknesses
+include somewhat brief standalone convergence discussion and the absence of
+feature normalization in Notebook 2, which forces extremely small learning rates
+(1e-9) and a large number of iterations (100,000).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GRADING BREAKDOWN (0.0 – 5.0 SCALE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+────────────────────────────────────────────────────────────────────────────────
+1. Repository Structure & Compliance          Score: 0.5 / 0.5
+────────────────────────────────────────────────────────────────────────────────
+  ✔ README.md present and detailed.
+  ✔ Two notebooks present: 01_part1_linreg_1feature.ipynb and
+    02_part2_polyreg.ipynb, clearly mapping to Part I and Part II.
+  ✔ All datasets defined inline inside the notebooks (NumPy arrays).
+  ✔ Only Python, NumPy, and Matplotlib are imported. No scikit-learn,
+    TensorFlow, scipy, statsmodels, seaborn, or any automated fitting
+    function used.
+
+  Deductions: None.
+
+────────────────────────────────────────────────────────────────────────────────
+2. Notebook 1 – Linear Regression (One Feature)   Score: 1.85 / 2.0
+────────────────────────────────────────────────────────────────────────────────
+  ✔ Dataset visualization: Mass–Luminosity scatter/line plot with axes labels,
+    legend, and title. Followed by a qualitative discussion of the non-linear
+    trend.
+  ✔ Hypothesis and MSE: predict() and compute_cost() functions correctly
+    implement ŷ = wM + b and J = (1/2m)Σ(ŷ−y)².
+  ✔ Cost surface [MANDATORY]: meshgrid over (w, b) space, 3D surface plotted
+    with Matplotlib, and a markdown explanation of the minimum. Computation
+    uses explicit (non-vectorized) loop as required.
+  ✔ Gradient derivation: Mathematical partial derivatives of J w.r.t. w and b
+    are explicitly shown in LaTeX, then implemented in compute_gradient().
+  ✔ Non-vectorized gradient descent: gradient_descent_no_vectorized() uses
+    explicit Python for-loops for both forward pass and gradient accumulation.
+  ✔ Vectorized gradient descent: gradient_descent_vectorized() uses NumPy
+    broadcasting and is correctly separated from the non-vectorized version.
+  ✔ Convergence plot [MANDATORY]: Loss curve plotted vs. iterations.
+  ✔ Multiple learning-rate experiments [MANDATORY]: Three values tested
+    (α = 0.001, 0.01, 0.1) with comparative plot and printed final parameters
+    and loss.
+  ✔ Final fit plot: Scatter of observations overlaid with fitted line using
+    optimal parameters.
+  ✔ Conceptual understanding: Physical meaning of w explained (rate of change
+    of luminosity per unit mass); limitations of linearity discussed
+    (power-law behavior, extreme masses, physical effects not captured).
+
+  Minor deductions (-0.15):
+  - The convergence discussion after the convergence plot is minimal and
+    qualitative; the learning-rate section serves as the main convergence
+    analysis but a brief, standalone discussion of what the convergence plot
+    indicates (e.g., rate of decrease, sign of convergence) would strengthen
+    this cell.
+  - In gradient_descent_no_vectorized(), the cost appended to J_history is
+    computed from L_hat before the parameter update rather than after,
+    causing the reported first-step cost to not reflect the updated state.
+    This is a minor implementation inconsistency.
+
+────────────────────────────────────────────────────────────────────────────────
+3. Notebook 2 – Polynomial Regression (Two Features)  Score: 1.85 / 2.0
+────────────────────────────────────────────────────────────────────────────────
+  ✔ Visualization with temperature encoding: scatter plot of L vs M with
+    temperature encoded via colormap='magma' and colorbar. Followed by
+    physical interpretation.
+  ✔ Feature engineering [M, T, M², M·T]: construir_X() function cleanly
+    constructs the design matrix with all four features; each column's
+    physical interpretation is explained.
+  ✔ Vectorized loss and gradients: calcular_costo(), calcular_gradientes(),
+    and descenso_gradiente() are fully vectorized using NumPy matrix
+    operations (X.T @ error, X @ w + b).
+  ✔ Training and convergence plot: Loss curve plotted on a log scale for
+    the full-feature M3 model.
+  ✔ Feature selection experiment – M1, M2, M3 [MANDATORY]: Three models
+    compared (M1: [M,T], M2: [M,T,M²], M3: [M,T,M²,M·T]); final loss
+    reported and prediction vs. real scatter plots generated for each.
+  ✔ Interaction cost analysis (w_MT sweep) [MANDATORY]: w_MT swept over a
+    range centred on the trained value; cost curve plotted with optimal
+    marked; interpretation of the curve's slope as importance of interaction
+    term is provided.
+  ✔ Inference example [MANDATORY]: Prediction for M=1.3, T=6600 K computed
+    from trained M3 weights; result validated against training data range
+    with physical commentary.
+
+  Minor deductions (-0.15):
+  - Feature normalization/standardization is absent. The raw features span
+    very different scales (M ≈ 0.6–2.4 vs T ≈ 3800–9200), requiring an
+    extremely small learning rate (1e-9) and 100,000 iterations to achieve
+    convergence. A brief note on this design choice, or a normalization step,
+    would improve the submission technically and pedagogically.
+  - The M1/M2/M3 comparison shows final loss values but does not include a
+    combined convergence plot or a summary table with explicit commentary on
+    which model performs best and why – a brief discussion cell is missing.
+
+────────────────────────────────────────────────────────────────────────────────
+4. Cloud Execution Evidence (AWS SageMaker)      Score: 0.5 / 0.5
+────────────────────────────────────────────────────────────────────────────────
+  ✔ README contains a dedicated "AWS SageMaker Execution Evidence" section.
+  ✔ 10 screenshots provided (img/1.png – img/10.png) covering: SageMaker
+    domain configuration, user profile selection, Studio main interface,
+    Code Editor launch, project folder open with both notebooks visible,
+    execution of Notebook 1 (install, data visualisation, plots), and
+    execution of Notebook 2.
+  ✔ Successful execution is confirmed by screenshot evidence showing cells
+    with output and plots in SageMaker Studio Code Editor.
+  ✔ Local vs. cloud comparison: included in Section 5 of the SageMaker
+    evidence, noting equivalent results, no errors, and full reproducibility.
+
+  Deductions: None.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL GRADE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Repository structure & compliance :  0.50 / 0.5
+  Notebook 1 – Linear regression    :  1.85 / 2.0
+  Notebook 2 – Polynomial regression:  1.85 / 2.0
+  Cloud execution evidence          :  0.50 / 0.5
+                                       ──────────
+  Final grade: 4.7 / 5.0  →  PASS (≥ 3.0)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STRENGTHS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  • All mandatory elements are present and clearly organized: cost surface,
+    convergence plot, three learning-rate experiments, M1/M2/M3 comparison,
+    w_MT sweep, and an inference demonstration.
+  • Strict compliance with library constraints: zero use of scikit-learn,
+    scipy, statsmodels, or any automatic fitting routine.
+  • Both non-vectorized (loop-based) and vectorized implementations are
+    provided in Notebook 1 with clear separation, demonstrating understanding
+    of both approaches.
+  • Mathematical derivations (partial derivatives of the MSE) are shown
+    explicitly in LaTeX before the code, linking theory to implementation.
+  • The multivariate design matrix in Notebook 2 is cleanly modular
+    (construir_X() with flags for M² and M·T), making the M1/M2/M3
+    experiment easy to reproduce.
+  • AWS SageMaker evidence is thorough, covering all stages from domain
+    setup to plot generation, with well-captioned screenshots.
+  • Physical context (stellar luminosity, mass-luminosity relationship) is
+    consistently maintained throughout both notebooks with appropriate
+    domain interpretation of model parameters.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ISSUES & MISSING ELEMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  • [Notebook 1] The standalone convergence discussion cell (Section 8) is
+    minimal. It shows the plot but does not comment on the rate of decrease
+    or whether convergence has been reached. The deeper analysis appears
+    implicitly in the learning-rate section.
+  • [Notebook 1] Minor implementation bug in gradient_descent_no_vectorized():
+    cost is recorded from L_hat computed before the weight update in that
+    iteration, so the history is slightly offset.
+  • [Notebook 2] No feature normalization/standardization. M and T differ in
+    scale by ~4 orders of magnitude, forcing learning rates as small as 1e-9
+    with 100,000 iterations. Adding a brief note explaining this trade-off
+    (or normalizing features) would be good practice.
+  • [Notebook 2] The M1/M2/M3 comparison lacks a unified discussion cell
+    explicitly comparing loss values across models and explaining which model
+    performs best and the physical reason (e.g., M² captures the power-law
+    behavior, M·T captures thermal-mass coupling).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TA FEEDBACK TO STUDENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Excellent work overall. Your submission demonstrates solid understanding of the
+mathematical foundations of regression and gradient descent, and the code is
+clean, modular, and correctly implements everything from first principles.
+
+Two areas for improvement stand out:
+
+1. Deeper convergence analysis. When you plot the loss curve, go one step
+   further: comment on the speed of convergence, whether it has fully
+   converged or is still decreasing, and what this implies about the choice
+   of learning rate. A sentence or two in each discussion cell is enough.
+
+2. Feature scaling in Notebook 2. When your features span very different
+   numerical ranges (here M ≈ 0.6–2.4 vs T ≈ 3800–9200), gradient descent
+   behaves poorly unless you normalize first. Consider adding a brief
+   z-score normalization step and showing that the same result is achieved
+   with a larger learning rate and fewer iterations. This is a critical
+   practical skill in any production ML workflow.
+
+Both of these are refinements, not corrections — the core assignment is
+fully delivered and correctly implemented. Well done.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AI-GENERATION ASSESSMENT (NON-GRADING – INFORMATIVE ONLY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This section is informative only and does NOT affect the final grade.
+
+A. Qualitative Assessment
+──────────────────────────────────────────────────────────────────────────────
+  Indicators consistent with AI assistance:
+  • Explanation cells follow an extremely uniform structure throughout both
+    notebooks: LaTeX formula → English/Spanish prose → code → brief
+    interpretation. The pattern is applied with near-zero variation.
+  • Mathematical notation is impeccable and consistently formatted (correct
+    LaTeX delimiters, aligned equations) — unusual for entirely hand-typed
+    student work.
+  • Spanish prose is grammatically flawless, uses formal academic register
+    without colloquialisms, and contains no hesitation markers or
+    mid-thought corrections.
+  • Function docstrings follow identical patterns (Args/Returns blocks,
+    uniform indentation, one-line summaries) across both notebooks.
+  • All mandatory rubric items appear in almost exactly the order listed in
+    the assignment specification, with no apparent exploration or iteration
+    visible in the notebooks.
+  • No debug cells, commented-out experiments, or incremental iteration
+    artifacts are present.
+
+  Indicators of individual human effort:
+  • The choice of physical dataset (stellar luminosity) and its consistent
+    use across both notebooks suggests genuine topic interest or guidance.
+  • The learning-rate values chosen (0.001, 0.01, 0.1 for Part I; 1e-8 and
+    1e-9 for Part II) reflect practical experimentation with scale, which
+    can arise from genuine trial-and-error.
+  • The absence of feature normalization in Notebook 2 (causing very small
+    learning rates) is a practical imperfection consistent with human
+    implementation that was not subsequently polished.
+
+B. Quantitative Estimate
+──────────────────────────────────────────────────────────────────────────────
+  Code:                ~60%  AI involvement
+  Explanations / Markdown:  ~75%  AI involvement
+  README:              ~70%  AI involvement
+
+C. Commentary
+──────────────────────────────────────────────────────────────────────────────
+  The uniformity of style, the absence of any exploratory or iterative
+  artifacts, and the precise correspondence between the assignment rubric
+  and the notebook structure are the primary signals behind these estimates.
+  The code itself is correctly implemented and shows awareness of the
+  numerical issues (e.g., choosing very small learning rates to compensate
+  for un-normalized features), which may reflect genuine student
+  engagement with the material, even if AI tools contributed substantially
+  to drafting and formatting both code and prose.
+
+  This assessment is observational and does not imply misconduct.
+
+================================================================================
+END OF REPORT
+================================================================================
